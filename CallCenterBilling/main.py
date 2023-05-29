@@ -20,20 +20,23 @@ class App(QMainWindow):
         self.__metadata = None
         self.__numbers = None
         self.InitDatabase()
-
+        # self.firstStart()
+        self.loadItems()
+    def firstStart(self):
         new_products = [
-            {'operator':'Phone 1', 'number':1000},
-            {'operator': 'Phone 2', 'number': 2000},
-            {'operator': 'Phone 3', 'number': 3000},
-            {'operator': 'Phone 4', 'number': 4000},
+            {'operator':'МТС', 'number':8286511590},
+            {'operator': 'БИЛАЙН', 'number': 8296441397},
+            {'operator': 'МЕГАФОН', 'number': 8236351696},
+            {'operator': 'ТЕЛЕ2', 'number': 8286341394},
         ]
         insertion_querry = self.__numbers.insert().values(new_products)
-        self.__engine.connect().execute(insertion_querry)
-        # self.loadItems()
+        self.__connection.execute(insertion_querry)
+        self.__connection.commit()
+        
         
     def InitDatabase(self):
         self.__engine = database.create_engine('sqlite:///CallCenterBilling/database.db')
-        self.__connection = 
+        self.__connection = self.__engine.connect()
         self.__metadata = database.MetaData()
 
         self.__numbers = database.Table(
