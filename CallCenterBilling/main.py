@@ -15,6 +15,7 @@ class App(QMainWindow):
         self.ui.deleteButton.clicked.connect(self.deleteNumber)
 
         self.__table = self.ui.tableWidget
+        self.__connection = None
         self.__engine = None
         self.__metadata = None
         self.__numbers = None
@@ -32,6 +33,7 @@ class App(QMainWindow):
         
     def InitDatabase(self):
         self.__engine = database.create_engine('sqlite:///CallCenterBilling/database.db')
+        self.__connection = 
         self.__metadata = database.MetaData()
 
         self.__numbers = database.Table(
