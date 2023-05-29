@@ -22,6 +22,7 @@ class App(QMainWindow):
         self.InitDatabase()
         # self.firstStart()
         self.loadItems()
+
     def firstStart(self):
         new_products = [
             {'operator':'МТС', 'number':8286511590},
@@ -32,7 +33,11 @@ class App(QMainWindow):
         insertion_querry = self.__numbers.insert().values(new_products)
         self.__connection.execute(insertion_querry)
         self.__connection.commit()
+    def commitQuerry(self,querry):
+        self.__connection.execute(querry)
+        self.__connection.commit()
         
+
         
     def InitDatabase(self):
         self.__engine = database.create_engine('sqlite:///CallCenterBilling/database.db')
@@ -49,26 +54,25 @@ class App(QMainWindow):
         self.__metadata.create_all(self.__engine)
 
     def loadItems(self):
-        numbers = [
-            {'operator':'Phone 1', 'number':1000},
-            {'operator': 'Phone 2', 'number': 2000},
-            {'operator': 'Phone 3', 'number': 3000},
-            {'operator': 'Phone 4', 'number': 4000},
-        ]
+        select_all_query = self.__numbers.select()
+        exec = self.__connection.execute(select_all_query)
+        result_select_all_result = exec.fetchall()
+        newlist = list(map(dict,result_select_all_result))
 
-        self.__table.setRowCount(len(numbers))
-        self.__table.setColumnCount(2)
 
-        self.__table.setHorizontalHeaderLabels(('Оператор','Номер'))
+        # self.__table.setRowCount(len(numbers))
+        # self.__table.setColumnCount(2)
 
-        self.__table.setColumnWidth(0,100)
-        self.__table.setColumnWidth(1,100)
+        # self.__table.setHorizontalHeaderLabels(('Оператор','Номер'))
 
-        row_index = 0
-        for product in numbers:
-            self.ui.tableWidget.setItem(row_index,0,QTableWidgetItem(str(product['operator'])))
-            self.ui.tableWidget.setItem(row_index,1,QTableWidgetItem(str(product['number'])))
-            row_index += 1
+        # self.__table.setColumnWidth(0,100)
+        # self.__table.setColumnWidth(1,100)
+
+        # row_index = 0
+        # for product in numbers:
+        #     self.ui.tableWidget.setItem(row_index,0,QTableWidgetItem(str(product['operator'])))
+        #     self.ui.tableWidget.setItem(row_index,1,QTableWidgetItem(str(product['number'])))
+        #     row_index += 1
 
     def addNumber(self):
         print(1)
