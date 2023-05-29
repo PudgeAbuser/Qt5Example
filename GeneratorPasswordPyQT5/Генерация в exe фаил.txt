@@ -1,0 +1,17 @@
+# pip install pyuic5-tool
+# pyuic5 -x form.ui -o newForm.py
+# https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QTableWidget.html
+
+1 вариант:
+1) pip install pyinstaller 
+2) pyinstaller --onefile main.py
+3) Взять фаил c dist и перетащить в главную папку где находится форма ui
+4) Удалить все файлы build и dist, в главной фаил .spec. Оставить *.exe, *.ui и *.py
+5) Запустить exe фаил
+
+
+2 вариант:
+1) pip install pyinstaller 
+2) Создать копию файла .py
+3) Переименовать копию .py в расширение .pyw
+4) Запустить pyw
