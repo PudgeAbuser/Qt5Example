@@ -14,6 +14,9 @@ class App(QMainWindow):
         self.ui.addButton.clicked.connect(self.addNumber)
         self.ui.deleteButton.clicked.connect(self.deleteNumber)
 
+
+        self.__choiceoperator = self.ui.operator1
+        self.__inputnumber = self.ui.number
         self.__table = self.ui.tableWidget
         self.__connection = None
         self.__engine = None
@@ -33,12 +36,12 @@ class App(QMainWindow):
         insertion_querry = self.__numbers.insert().values(new_products)
         self.__connection.execute(insertion_querry)
         self.__connection.commit()
+
     def commitQuerry(self,querry):
         self.__connection.execute(querry)
         self.__connection.commit()
         
 
-        
     def InitDatabase(self):
         self.__engine = database.create_engine('sqlite:///CallCenterBilling/database.db')
         self.__connection = self.__engine.connect()
@@ -57,26 +60,46 @@ class App(QMainWindow):
         select_all_query = self.__numbers.select()
         exec = self.__connection.execute(select_all_query)
         result_select_all_result = exec.fetchall()
-        newlist = list(map(dict,result_select_all_result))
+
+        numbers = []
+        for result in result_select_all_result:
+            result_dict = {
+                'id': result[0],
+                'operator': result[1],
+                'number' : result[2] 
+            }
+            numbers.append(result_dict)
 
 
-        # self.__table.setRowCount(len(numbers))
-        # self.__table.setColumnCount(2)
+        self.__table.setRowCount(len(numbers))
+        self.__table.setColumnCount(2)
 
-        # self.__table.setHorizontalHeaderLabels(('Оператор','Номер'))
+        self.__table.setHorizontalHeaderLabels(('Оператор','Номер'))
 
-        # self.__table.setColumnWidth(0,100)
-        # self.__table.setColumnWidth(1,100)
+        self.__table.setColumnWidth(0,100)
+        self.__table.setColumnWidth(1,200)
 
-        # row_index = 0
-        # for product in numbers:
-        #     self.ui.tableWidget.setItem(row_index,0,QTableWidgetItem(str(product['operator'])))
-        #     self.ui.tableWidget.setItem(row_index,1,QTableWidgetItem(str(product['number'])))
-        #     row_index += 1
+        row_index = 0
+        for product in numbers:
+            self.ui.tableWidget.setItem(row_index,0,QTableWidgetItem(str(product['operator'])))
+            self.ui.tableWidget.setItem(row_index,1,QTableWidgetItem(str(product['number'])))
+            row_index += 1
 
     def addNumber(self):
-        print(1)
+        text_item = self.__choiceoperator.currentItem().text()
+        number_item = self.__inputnumber.toPlainText()
+        new_number = {
+                'operator': text_item,
+                'number' : number_item
+        }
+        insertion_querry = self.__numbers.insert().values(new_number)
+        self.commitQuerry(insertion_querry)
+        self.updateRow()
 
+    def updateRow(self):
+        self.__table.clear()
+        self.__table.setRowCount(0)
+        self.loadItems()
     def deleteNumber(self):
         print(2)
 
